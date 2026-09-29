@@ -1,0 +1,95 @@
+/* ISO_42001.css — mirrors ISO_27001.css with AI-themed overrides */
+
+/* Import the base ISO styles — assumes ISO_27001.css exists in the same directory */
+@import "./ISO_27001.css";
+
+/* ── AI theme accent color overrides ── */
+.ai-theme {
+  --ai-accent: #10b981;          /* emerald green for AI/tech feel */
+  --ai-accent-glow: rgba(16, 185, 129, 0.35);
+  --ai-accent-dim: rgba(16, 185, 129, 0.12);
+}
+
+/* Hero badge */
+.ai-badge {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(16, 185, 129, 0.05));
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+/* Hero primary CTA */
+.ai-primary {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35) !important;
+}
+.ai-primary:hover {
+  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.5) !important;
+}
+
+/* Stat accent value */
+.ai-accent {
+  color: #34d399 !important;
+}
+
+/* Orbit rings */
+.ai-ring {
+  border-color: rgba(16, 185, 129, 0.25) !important;
+}
+.ai-particle {
+  background: radial-gradient(circle, #10b981, transparent) !important;
+}
+.ai-circle {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.35) !important;
+}
+.ai-arc {
+  border-top-color: #10b981 !important;
+}
+
+/* Badge card */
+.ai-badge-card {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+}
+
+/* Overview cards */
+.ai-card .iso-card-icon {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(16, 185, 129, 0.05));
+  color: #34d399;
+}
+
+/* Clause card accents */
+.ai-clause {
+  border-top: 3px solid #10b981 !important;
+}
+.ai-number {
+  color: #34d399 !important;
+  background: rgba(16, 185, 129, 0.1) !important;
+}
+
+/* Annex intro */
+.ai-annex-intro {
+  border-left: 4px solid #10b981 !important;
+}
+
+/* Domain cards */
+.ai-domain {
+  border-top: 3px solid #10b981 !important;
+}
+.ai-domain .iso-domain-title {
+  color: #34d399 !important;
+}
+
+/* Benefit cards */
+.ai-benefit .iso-benefit-icon {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(16, 185, 129, 0.05)) !important;
+  color: #34d399 !important;
+}
+
+/* CTA section */
+.ai-cta {
+  border: 1px solid rgba(16, 185, 129, 0.25) !important;
+}
+.ai-cta-primary {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35) !important;
+}

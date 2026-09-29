@@ -1,0 +1,94 @@
+/* DPDPA.css — mirrors ISO_27001.css with India DPDPA-themed overrides */
+
+@import "./ISO_27001.css";
+
+/* ── DPDPA theme accent color overrides ── */
+.dpdpa-theme {
+  --dpdpa-accent: #ea580c;          /* India saffron for identity & sovereignty */
+  --dpdpa-accent-glow: rgba(234, 88, 12, 0.35);
+  --dpdpa-accent-dim: rgba(234, 88, 12, 0.12);
+}
+
+/* Hero badge */
+.dpdpa-badge {
+  background: linear-gradient(135deg, rgba(234, 88, 12, 0.18), rgba(234, 88, 12, 0.05));
+  border-color: rgba(234, 88, 12, 0.4);
+  color: #fb923c;
+}
+
+/* Hero primary CTA */
+.dpdpa-primary {
+  background: linear-gradient(135deg, #ea580c, #c2410c) !important;
+  box-shadow: 0 8px 24px rgba(234, 88, 12, 0.35) !important;
+}
+.dpdpa-primary:hover {
+  box-shadow: 0 12px 32px rgba(234, 88, 12, 0.5) !important;
+}
+
+/* Stat accent value */
+.dpdpa-accent {
+  color: #fb923c !important;
+}
+
+/* Orbit rings */
+.dpdpa-ring {
+  border-color: rgba(234, 88, 12, 0.25) !important;
+}
+.dpdpa-particle {
+  background: radial-gradient(circle, #ea580c, transparent) !important;
+}
+.dpdpa-circle {
+  border-color: #ea580c !important;
+  box-shadow: 0 0 20px rgba(234, 88, 12, 0.35) !important;
+}
+.dpdpa-arc {
+  border-top-color: #ea580c !important;
+}
+
+/* Badge card */
+.dpdpa-badge-card {
+  background: linear-gradient(135deg, #ea580c, #c2410c) !important;
+}
+
+/* Overview cards */
+.dpdpa-card .iso-card-icon {
+  background: linear-gradient(135deg, rgba(234, 88, 12, 0.18), rgba(234, 88, 12, 0.05));
+  color: #fb923c;
+}
+
+/* Clause card accents */
+.dpdpa-clause {
+  border-top: 3px solid #ea580c !important;
+}
+.dpdpa-number {
+  color: #fb923c !important;
+  background: rgba(234, 88, 12, 0.1) !important;
+}
+
+/* Annex intro */
+.dpdpa-annex-intro {
+  border-left: 4px solid #ea580c !important;
+}
+
+/* Domain cards */
+.dpdpa-domain {
+  border-top: 3px solid #ea580c !important;
+}
+.dpdpa-domain .iso-domain-title {
+  color: #fb923c !important;
+}
+
+/* Benefit cards */
+.dpdpa-benefit .iso-benefit-icon {
+  background: linear-gradient(135deg, rgba(234, 88, 12, 0.18), rgba(234, 88, 12, 0.05)) !important;
+  color: #fb923c !important;
+}
+
+/* CTA section */
+.dpdpa-cta {
+  border: 1px solid rgba(234, 88, 12, 0.25) !important;
+}
+.dpdpa-cta-primary {
+  background: linear-gradient(135deg, #ea580c, #c2410c) !important;
+  box-shadow: 0 8px 24px rgba(234, 88, 12, 0.35) !important;
+}

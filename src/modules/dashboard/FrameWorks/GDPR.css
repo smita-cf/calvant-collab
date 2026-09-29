@@ -1,0 +1,94 @@
+/* GDPR.css — mirrors ISO_27001.css with EU GDPR-themed overrides */
+
+@import "./ISO_27001.css";
+
+/* ── GDPR theme accent color overrides ── */
+.gdpr-theme {
+  --gdpr-accent: #2563eb;          /* EU blue for trust & regulation */
+  --gdpr-accent-glow: rgba(37, 99, 235, 0.35);
+  --gdpr-accent-dim: rgba(37, 99, 235, 0.12);
+}
+
+/* Hero badge */
+.gdpr-badge {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(37, 99, 235, 0.05));
+  border-color: rgba(37, 99, 235, 0.4);
+  color: #60a5fa;
+}
+
+/* Hero primary CTA */
+.gdpr-primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35) !important;
+}
+.gdpr-primary:hover {
+  box-shadow: 0 12px 32px rgba(37, 99, 235, 0.5) !important;
+}
+
+/* Stat accent value */
+.gdpr-accent {
+  color: #60a5fa !important;
+}
+
+/* Orbit rings */
+.gdpr-ring {
+  border-color: rgba(37, 99, 235, 0.25) !important;
+}
+.gdpr-particle {
+  background: radial-gradient(circle, #2563eb, transparent) !important;
+}
+.gdpr-circle {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.35) !important;
+}
+.gdpr-arc {
+  border-top-color: #2563eb !important;
+}
+
+/* Badge card */
+.gdpr-badge-card {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+}
+
+/* Overview cards */
+.gdpr-card .iso-card-icon {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(37, 99, 235, 0.05));
+  color: #60a5fa;
+}
+
+/* Clause card accents */
+.gdpr-clause {
+  border-top: 3px solid #2563eb !important;
+}
+.gdpr-number {
+  color: #60a5fa !important;
+  background: rgba(37, 99, 235, 0.1) !important;
+}
+
+/* Annex intro */
+.gdpr-annex-intro {
+  border-left: 4px solid #2563eb !important;
+}
+
+/* Domain cards */
+.gdpr-domain {
+  border-top: 3px solid #2563eb !important;
+}
+.gdpr-domain .iso-domain-title {
+  color: #60a5fa !important;
+}
+
+/* Benefit cards */
+.gdpr-benefit .iso-benefit-icon {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(37, 99, 235, 0.05)) !important;
+  color: #60a5fa !important;
+}
+
+/* CTA section */
+.gdpr-cta {
+  border: 1px solid rgba(37, 99, 235, 0.25) !important;
+}
+.gdpr-cta-primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35) !important;
+}

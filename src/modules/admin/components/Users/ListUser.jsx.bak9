@@ -1,0 +1,764 @@
+﻿'use client'
+
+import React, { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import api from "../../api/adminAxios";
+import { captureActivity, ACTIONS } from "../../shell/services/activities";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TablePagination,
+  Paper,
+  Button,
+  CircularProgress,
+  Box,
+  TextField,
+  Select,
+  MenuItem,
+  Typography,
+  Alert,
+  Stack,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Chip,
+  OutlinedInput,
+  Tooltip,
+} from "@mui/material";
+
+import SaveIcon from "@mui/icons-material/Save";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import CancelIcon from "@mui/icons-material/Cancel";
+
+import { useEffectiveOrg } from '../../../../hooks/useEffectiveOrg';
+function ListUsers() {
+  const [users, setUsers] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [roleFilter, setRoleFilter] = useState("");
+  const [updatingUserId, setUpdatingUserId] = useState(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [isRoot, setIsRoot] = useState(false);
+
+  // Inline edit state
+  const [editingId, setEditingId] = useState(null);
+  const [editDraft, setEditDraft] = useState(null);
+
+  // Single delete dialog
+  const [openDelete, setOpenDelete] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [singleConfirmText, setSingleConfirmText] = useState("");
+
+  const token = localStorage.getItem("token");
+  const roles = [
+    "root",
+    "steering_committee_member",
+    "risk_owner",
+    "risk_manager",
+    "process_owner",
+    "process_manager",
+    "auditor",
+    "audit_manager",
+    "user",
+    "ciso",
+    "aio",
+    "dpo",
+  ];
+  const decoded = token ? jwtDecode(token) : null;
+  const currentUserId = decoded?.userid || decoded?.id || decoded?.sub || null;
+  const loggedInRole = Array.isArray(decoded?.role)
+    ? decoded.role[0]
+    : decoded?.role;
+
+  useEffect(() => {
+    const hasRootRole = Array.isArray(decoded?.role)
+      ? decoded.role.includes("root")
+      : decoded?.role === "root";
+
+    setIsRoot(hasRootRole);
+    fetchUsers();
+    fetchDepartments();
+  }, []);
+
+  const toArray = (val) => {
+  const { isPartnerRoot, isOrgManager, effectiveOrgId, selectedChildOrg } = useEffectiveOrg();
+    if (!val) return [];
+    if (Array.isArray(val)) return val.filter(Boolean);
+    if (typeof val === "string")
+      return val
+        .split(",")
+        .map((v) => v.trim())
+        .filter(Boolean);
+    return [];
+  };
+
+  const isPartnerRoot =
+    loggedInRole === "root" &&
+    sessionStorage.getItem("isPartnerOrg") === "true";
+
+  const fetchUsers = async () => {
+    try {
+      const { data } = await api.get("https://api.calvant.com/user-service/api/users");
+      // partner root sees users from their own org + all child orgs
+      // backend already filters by org from JWT, but we need child org users too
+      // so for partner root, fetch all and filter client-side by known child orgs
+      setUsers(
+        (data || []).map((u) => ({
+          ...u,
+          role: toArray(u.role),
+          department: toArray(u.department),
+          isAuditor: !!u.isAuditor,
+          modules: toArray(u.modules),
+        })),
+      );
+      setLoading(false);
+    } catch (err) {
+      setError("Failed to fetch users");
+      setLoading(false);
+    }
+  };
+
+  const fetchDepartments = async () => {
+    try {
+      const { data } = await api.get("https://api.calvant.com/user-service/api/departments");
+      setDepartments(Array.isArray(data) ? data : []);
+    } catch {}
+  };
+
+  const departmentMap = departments.reduce((acc, d) => {
+    acc[String(d.id)] = d.name;
+    return acc;
+  }, {});
+
+  const takenByRiskOwner = React.useMemo(() => {
+    const taken = new Set();
+    users.forEach((u) => {
+      if (String(u.id) === String(editingId)) return;
+      if (u.role.includes("risk_owner")) {
+        u.department.forEach((dId) => taken.add(String(dId)));
+      }
+    });
+    return taken;
+  }, [users, editingId]);
+
+  // ── Inline Edit Handlers ──────────────────────────────────────────────────
+
+  const handleStartEdit = (user) => {
+  const { isPartnerRoot, isOrgManager, effectiveOrgId, selectedChildOrg } = useEffectiveOrg();
+    setEditingId(user.id);
+    setEditDraft({ ...user });
+  };
+
+  const handleCancelEdit = () => {
+  const { isPartnerRoot, isOrgManager, effectiveOrgId, selectedChildOrg } = useEffectiveOrg();
+    setEditingId(null);
+    setEditDraft(null);
+  };
+
+  const handleDraftChange = (field, value) => {
+  const { isPartnerRoot, isOrgManager, effectiveOrgId, selectedChildOrg } = useEffectiveOrg();
+    setEditDraft((prev) => {
+      let finalValue = value;
+
+      if (field === "role") {
+        finalValue = Array.isArray(value) ? [...value] : [value];
+        const hasUser = finalValue.includes("user");
+        const hasOther = finalValue.some((r) => r !== "user");
+
+        if (hasUser && hasOther) {
+          if (prev.role.includes("user")) {
+            finalValue = finalValue.filter((r) => r !== "user");
+          } else {
+            finalValue = ["user"];
+          }
+        }
+      }
+
+      const updated = { ...prev, [field]: finalValue };
+
+      // Clear modules whenever role changes away from "user"
+      if (field === "role" && !finalValue.includes("user")) {
+        updated.modules = [];
+      }
+
+      return updated;
+    });
+  };
+
+  const handleSave = async () => {
+    if (!editDraft) return;
+
+    setUpdatingUserId(editDraft?.id);
+
+    try {
+      const payload = {
+        ...editDraft,
+        role: editDraft?.role || [],
+        department: editDraft?.department || [],
+        name: editDraft?.name,
+      };
+
+      // Always send modules — empty array for non-user roles to clear stale modules
+      if (editDraft?.role?.includes("user")) {
+        payload.modules = editDraft?.modules || [];
+      } else {
+        payload.modules = [];
+      }
+
+      const res = await api.post("/users/update", payload);
+
+      // ── Activity log: UPDATE ──────────────────────────────────────
+      captureActivity({
+        action: ACTIONS.UPDATE,
+        item: [
+          {
+            name: payload.name,
+            email: editDraft?.email,
+            role: payload.role,
+            department: payload.department.map((id) => departmentMap[id] || id),
+            isAuditor: payload.isAuditor,
+            modules: payload.modules,
+          },
+        ],
+      });
+
+      setSuccess(`${editDraft?.name} updated successfully`);
+      setEditingId(null);
+      setEditDraft(null);
+
+      fetchUsers();
+    } catch (err) {
+      console.error("Update error:", err?.response?.data || err?.message);
+      alert("Update failed: " + (err?.response?.data || err?.message));
+    } finally {
+      setUpdatingUserId(null);
+    }
+  };
+
+  // ── Filtering & Pagination ────────────────────────────────────────────────
+
+  // Deduplicate by user id before filtering
+  const uniqueUsers = Array.from(
+    new Map(users.map((u) => [String(u.id), u])).values(),
+  );
+
+  const filteredUsers = uniqueUsers.filter((u) => {
+    const deptNames = u.department
+      .map((id) => departmentMap[id] || "")
+      .join(" ");
+    const searchString = [u.name, u.email, u.role.join(" "), deptNames]
+      .join(" ")
+      .toLowerCase();
+    const matchesSearch = searchString.includes(searchTerm.toLowerCase());
+    const matchesRole = roleFilter ? u.role.includes(roleFilter) : true;
+    return matchesSearch && matchesRole;
+  });
+
+  const visibleRows = filteredUsers.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage,
+  );
+
+  // ── Single Delete ─────────────────────────────────────────────────────────
+
+  const handleOpenDelete = (id) => {
+  const { isPartnerRoot, isOrgManager, effectiveOrgId, selectedChildOrg } = useEffectiveOrg();
+    setDeleteTarget(id);
+    setSingleConfirmText("");
+    setOpenDelete(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (singleConfirmText.trim().toLowerCase() !== "confirm") return;
+    try {
+      await api.post("/users/delete", { id: deleteTarget });
+
+      // ── Activity log: DELETE ──────────────────────────────────────
+      const deletedUser = users.find(
+        (u) => String(u.id) === String(deleteTarget),
+      );
+      captureActivity({
+        action: ACTIONS.DELETE,
+        item: [
+          {
+            name: deletedUser?.name || "Unknown",
+            email: deletedUser?.email || "Unknown",
+            role: deletedUser?.role || [],
+          },
+        ],
+      });
+
+      setSuccess("User deleted!");
+      setOpenDelete(false);
+      setSingleConfirmText("");
+      fetchUsers();
+    } catch {
+      alert("Delete failed");
+    }
+  };
+
+  // ── Department Chips ──────────────────────────────────────────────────────
+
+  const renderDepartmentChips = (deptArr) => {
+  const { isPartnerRoot, isOrgManager, effectiveOrgId, selectedChildOrg } = useEffectiveOrg();
+    if (!deptArr.length) return <Typography variant="caption">-</Typography>;
+    const visible = deptArr.slice(0, 3);
+    const overflow = deptArr.slice(3);
+    return (
+      <Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
+        {visible.map((id) => (
+          <Chip key={id} label={departmentMap[id] || id} size="small" />
+        ))}
+        {overflow.length > 0 && (
+          <Tooltip
+            title={overflow.map((id) => departmentMap[id] || id).join(", ")}
+          >
+            <Chip
+              label={`+${overflow.length} more`}
+              size="small"
+              color="primary"
+            />
+          </Tooltip>
+        )}
+      </Box>
+    );
+  };
+
+  // ── Render ────────────────────────────────────────────────────────────────
+
+  return (
+    <Box sx={{ p: 2 }}>
+      <Stack direction="row" spacing={2} mb={2} alignItems="center">
+        <Typography variant="h5">User Management</Typography>
+        <Box sx={{ flexGrow: 1 }}>
+          <TextField
+            placeholder="Search..."
+            size="small"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </Box>
+      </Stack>
+
+      {success && (
+        <Alert severity="success" sx={{ mb: 1 }} onClose={() => setSuccess("")}>
+          {success}
+        </Alert>
+      )}
+      {error && (
+        <Alert severity="error" sx={{ mb: 1 }} onClose={() => setError("")}>
+          {error}
+        </Alert>
+      )}
+
+      <Paper>
+        <TableContainer sx={{ maxHeight: "70vh" }}>
+          <Table stickyHeader size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>
+                  <Box>
+                    <Typography variant="caption" fontWeight="bold">
+                      Role
+                    </Typography>
+                    <Select
+                      size="small"
+                      displayEmpty
+                      value={roleFilter}
+                      renderValue={(selected) => selected || "All"}
+                      onChange={(e) => {
+                        setRoleFilter(e.target.value);
+                        setPage(0);
+                      }}
+                      sx={{
+                        display: "block",
+                        minWidth: 150,
+                        mt: 0.5,
+                        fontSize: "0.75rem",
+                      }}
+                    >
+                      <MenuItem value="">All</MenuItem>
+                      {roles.map((r) => (
+                        <MenuItem key={r} value={r}>
+                          {r}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </Box>
+                </TableCell>
+                <TableCell>Auditor</TableCell>
+                <TableCell
+                  sx={{ display: isSuperAdmin ? "none" : "table-cell" }}
+                >
+                  Departments
+                </TableCell>
+                {isRoot && <TableCell>Modules</TableCell>}
+                <TableCell align="right">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={6} align="center">
+                    <CircularProgress />
+                  </TableCell>
+                </TableRow>
+              ) : (
+                visibleRows.map((u) => {
+                  const isEditing = editingId === u.id;
+                  const draft = isEditing ? editDraft : u;
+                  const isSelf = String(u.id) === String(currentUserId);
+
+                  return (
+                    <TableRow
+                      key={u.id}
+                      sx={{
+                        backgroundColor: isEditing ? "#f0f7ff" : "inherit",
+                        "&:hover": {
+                          backgroundColor: isEditing ? "#e8f2ff" : "#f9fafb",
+                        },
+                      }}
+                    >
+                      {/* Name */}
+                      <TableCell>
+                        {isEditing ? (
+                          <TextField
+                            size="small"
+                            value={draft.name}
+                            onChange={(e) =>
+                              handleDraftChange("name", e.target.value)
+                            }
+                            sx={{ minWidth: 130 }}
+                          />
+                        ) : (
+                          u.name
+                        )}
+                      </TableCell>
+
+                      {/* Email — always read-only */}
+                      <TableCell>{u.email}</TableCell>
+
+                      {/* Role */}
+                      <TableCell>
+                        {isEditing ? (
+                          <Select
+                            multiple
+                            size="small"
+                            value={draft.role}
+                            onChange={(e) =>
+                              handleDraftChange("role", e.target.value)
+                            }
+                            input={<OutlinedInput />}
+                            sx={{ minWidth: 160 }}
+                          >
+                            {roles
+                              .filter((r) => {
+                                if (
+                                  r === "user" &&
+                                  draft.role.some(
+                                    (selected) => selected !== "user",
+                                  )
+                                ) {
+                                  return false;
+                                }
+                                return true;
+                              })
+                              .map((r) => (
+                                <MenuItem key={r} value={r}>
+                                  {r}
+                                </MenuItem>
+                              ))}
+                          </Select>
+                        ) : (
+                          u.role.join(", ")
+                        )}
+                      </TableCell>
+
+                      {/* Auditor */}
+                      <TableCell>
+                        {isEditing ? (
+                          <Select
+                            size="small"
+                            value={draft.isAuditor ? "yes" : "no"}
+                            onChange={(e) =>
+                              handleDraftChange(
+                                "isAuditor",
+                                e.target.value === "yes",
+                              )
+                            }
+                            sx={{ minWidth: 90 }}
+                          >
+                            <MenuItem value="yes">Yes</MenuItem>
+                            <MenuItem value="no">No</MenuItem>
+                          </Select>
+                        ) : (
+                          <Chip
+                            label={u.isAuditor ? "Yes" : "No"}
+                            size="small"
+                            color={u.isAuditor ? "success" : "default"}
+                          />
+                        )}
+                      </TableCell>
+
+                      {/* Departments */}
+                      <TableCell
+                        sx={{ display: isSuperAdmin ? "none" : "table-cell" }}
+                      >
+                        {isEditing
+                          ? (() => {
+                              const isRiskOwner =
+                                draft.role.includes("risk_owner");
+                              return (
+                                <Select
+                                  multiple={!isRiskOwner}
+                                  size="small"
+                                  value={
+                                    isRiskOwner
+                                      ? (draft.department[0] ?? "")
+                                      : draft.department
+                                  }
+                                  onChange={(e) => {
+                                    if (isRiskOwner) {
+                                      handleDraftChange(
+                                        "department",
+                                        e.target.value ? [e.target.value] : [],
+                                      );
+                                    } else {
+                                      handleDraftChange(
+                                        "department",
+                                        e.target.value,
+                                      );
+                                    }
+                                  }}
+                                  input={<OutlinedInput />}
+                                  sx={{ minWidth: 160 }}
+                                >
+                                  {departments.map((d) => {
+                                    const isTaken =
+                                      isRiskOwner &&
+                                      takenByRiskOwner.has(String(d.id));
+                                    return (
+                                      <MenuItem
+                                        key={d.id}
+                                        value={d.id}
+                                        disabled={isTaken}
+                                      >
+                                        {d.name}
+                                        {isTaken
+                                          ? " (risk owner assigned)"
+                                          : ""}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                              );
+                            })()
+                          : renderDepartmentChips(u.department)}
+                      </TableCell>
+
+                      {/* Modules (root only) */}
+                      {isRoot && (
+                        <TableCell>
+                          {isEditing && draft.role.includes("user") ? (
+                            <Select
+                              multiple
+                              size="small"
+                              value={draft.modules || []}
+                              onChange={(e) =>
+                                handleDraftChange("modules", e.target.value)
+                              }
+                              input={<OutlinedInput />}
+                              sx={{ minWidth: 160 }}
+                            >
+                              {["risk", "policies", "audit", "compliance"].map(
+                                (m) => (
+                                  <MenuItem key={m} value={m}>
+                                    {m}
+                                  </MenuItem>
+                                ),
+                              )}
+                            </Select>
+                          ) : (
+                            <Box
+                              sx={{
+                                display: "flex",
+                                gap: 0.5,
+                                flexWrap: "wrap",
+                              }}
+                            >
+                              {(u.modules || []).map((m) => (
+                                <Chip
+                                  key={m}
+                                  label={m}
+                                  size="small"
+                                  variant="outlined"
+                                />
+                              ))}
+                              {(!u.modules || u.modules.length === 0) && (
+                                <Typography variant="caption">-</Typography>
+                              )}
+                            </Box>
+                          )}
+                        </TableCell>
+                      )}
+
+                      {/* Actions */}
+                      <TableCell align="right">
+                        {isEditing ? (
+                          <Stack
+                            direction="row"
+                            spacing={1}
+                            justifyContent="flex-end"
+                          >
+                            <Button
+                              size="small"
+                              variant="contained"
+                              startIcon={<SaveIcon />}
+                              disabled={updatingUserId === u.id}
+                              onClick={handleSave}
+                            >
+                              Save
+                            </Button>
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              startIcon={<CancelIcon />}
+                              onClick={handleCancelEdit}
+                            >
+                              Cancel
+                            </Button>
+                          </Stack>
+                        ) : (
+                          <Stack
+                            direction="row"
+                            spacing={0.5}
+                            justifyContent="flex-end"
+                          >
+                            <Tooltip title="Edit row">
+                              <IconButton
+                                color="primary"
+                                size="small"
+                                onClick={() => handleStartEdit(u)}
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip
+                              title={
+                                isSelf
+                                  ? "You cannot delete your own account"
+                                  : "Delete"
+                              }
+                            >
+                              <span>
+                                <IconButton
+                                  color="error"
+                                  size="small"
+                                  onClick={() => handleOpenDelete(u.id)}
+                                  disabled={isSelf}
+                                >
+                                  <DeleteIcon fontSize="small" />
+                                </IconButton>
+                              </span>
+                            </Tooltip>
+                          </Stack>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <TablePagination
+          component="div"
+          count={filteredUsers.length}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={(e, p) => setPage(p)}
+          onRowsPerPageChange={(e) => {
+            setRowsPerPage(+e.target.value);
+            setPage(0);
+          }}
+        />
+      </Paper>
+
+      {/* ── Single Delete Dialog ── */}
+      <Dialog
+        open={openDelete}
+        onClose={() => {
+          setOpenDelete(false);
+          setSingleConfirmText("");
+        }}
+      >
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ mb: 2 }}>
+            Are you sure you want to delete this user? This action{" "}
+            <strong>cannot be undone</strong>.
+          </DialogContentText>
+          <DialogContentText sx={{ mb: 1 }}>
+            Type <strong>confirm</strong> to proceed:
+          </DialogContentText>
+          <TextField
+            autoFocus
+            fullWidth
+            size="small"
+            placeholder="confirm"
+            value={singleConfirmText}
+            onChange={(e) => setSingleConfirmText(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleConfirmDelete()}
+            error={
+              singleConfirmText.length > 0 &&
+              singleConfirmText.trim().toLowerCase() !== "confirm"
+            }
+            helperText={
+              singleConfirmText.length > 0 &&
+              singleConfirmText.trim().toLowerCase() !== "confirm"
+                ? 'Please type "confirm" exactly'
+                : ""
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setOpenDelete(false);
+              setSingleConfirmText("");
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            color="error"
+            variant="contained"
+            disabled={singleConfirmText.trim().toLowerCase() !== "confirm"}
+            onClick={handleConfirmDelete}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
+}
+
+export default ListUsers;

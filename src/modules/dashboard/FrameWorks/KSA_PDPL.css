@@ -1,0 +1,94 @@
+/* KSA_PDPL.css — mirrors ISO_27001.css with KSA PDPL-themed overrides */
+
+@import "./ISO_27001.css";
+
+/* ── KSA PDPL theme accent color overrides ── */
+.pdpl-theme {
+  --pdpl-accent: #8b5cf6;          /* violet / purple for privacy & sovereignty */
+  --pdpl-accent-glow: rgba(139, 92, 246, 0.35);
+  --pdpl-accent-dim: rgba(139, 92, 246, 0.12);
+}
+
+/* Hero badge */
+.pdpl-badge {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(139, 92, 246, 0.05));
+  border-color: rgba(139, 92, 246, 0.4);
+  color: #a78bfa;
+}
+
+/* Hero primary CTA */
+.pdpl-primary {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.35) !important;
+}
+.pdpl-primary:hover {
+  box-shadow: 0 12px 32px rgba(139, 92, 246, 0.5) !important;
+}
+
+/* Stat accent value */
+.pdpl-accent {
+  color: #a78bfa !important;
+}
+
+/* Orbit rings */
+.pdpl-ring {
+  border-color: rgba(139, 92, 246, 0.25) !important;
+}
+.pdpl-particle {
+  background: radial-gradient(circle, #8b5cf6, transparent) !important;
+}
+.pdpl-circle {
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.35) !important;
+}
+.pdpl-arc {
+  border-top-color: #8b5cf6 !important;
+}
+
+/* Badge card */
+.pdpl-badge-card {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+}
+
+/* Overview cards */
+.pdpl-card .iso-card-icon {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(139, 92, 246, 0.05));
+  color: #a78bfa;
+}
+
+/* Clause card accents */
+.pdpl-clause {
+  border-top: 3px solid #8b5cf6 !important;
+}
+.pdpl-number {
+  color: #a78bfa !important;
+  background: rgba(139, 92, 246, 0.1) !important;
+}
+
+/* Annex intro */
+.pdpl-annex-intro {
+  border-left: 4px solid #8b5cf6 !important;
+}
+
+/* Domain cards */
+.pdpl-domain {
+  border-top: 3px solid #8b5cf6 !important;
+}
+.pdpl-domain .iso-domain-title {
+  color: #a78bfa !important;
+}
+
+/* Benefit cards */
+.pdpl-benefit .iso-benefit-icon {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(139, 92, 246, 0.05)) !important;
+  color: #a78bfa !important;
+}
+
+/* CTA section */
+.pdpl-cta {
+  border: 1px solid rgba(139, 92, 246, 0.25) !important;
+}
+.pdpl-cta-primary {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.35) !important;
+}

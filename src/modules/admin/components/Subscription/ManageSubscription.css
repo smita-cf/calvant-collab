@@ -1,0 +1,490 @@
+/* ManageSubscription.css — Bigin-store-page-inspired layout.
+   Palette kept neutral (grays + one accent blue) to match the reference
+   screenshots: light gray page background, white cards, blue primary
+   buttons, outline secondary buttons. */
+
+.ms-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 24px 60px;
+  font-family: inherit;
+  color: #1f2430;
+}
+
+.ms-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  padding: 80px 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.ms-spin { animation: ms-spin 0.8s linear infinite; }
+@keyframes ms-spin { to { transform: rotate(360deg); } }
+
+/* ── Banners ─────────────────────────────────────────────────────────── */
+.ms-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+.ms-banner--info { background: #eef2ff; color: #3730a3; border: 1px solid #c7d2fe; }
+.ms-banner--success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+.ms-banner--error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+/* ── Activate card (pre-payment gate) ───────────────────────────────── */
+.ms-activate-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+  max-width: 560px;
+  margin: 60px auto;
+}
+.ms-activate-card h2 { margin: 0 0 10px; font-size: 19px; }
+.ms-activate-card p { color: #6b7280; font-size: 13.5px; line-height: 1.6; margin-bottom: 20px; }
+
+/* ── Trial extension (Layer 2) ──────────────────────────────────────── */
+.ms-trial-extension { margin-top: 18px; text-align: left; }
+.ms-trial-extension-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+.ms-trial-extension-note svg { flex-shrink: 0; margin-top: 1px; }
+.ms-trial-extension-note--approved { background: #ecfdf5; color: #065f46; }
+.ms-trial-extension-note--pending { background: #fffbeb; color: #92400e; }
+.ms-trial-extension-note--rejected { background: #fef2f2; color: #991b1b; display: block; }
+.ms-trial-extension-form {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: left;
+}
+.ms-trial-extension-form label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+.ms-trial-extension-optional { font-weight: 400; color: #9ca3af; }
+.ms-trial-extension-form textarea {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+}
+.ms-trial-extension-form textarea:disabled { background: #f3f4f6; }
+.ms-trial-extension-error { margin: 10px 0 0; }
+.ms-trial-extension-actions { display: flex; gap: 10px; margin-top: 12px; }
+
+/* ── Header row ──────────────────────────────────────────────────────── */
+.ms-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.ms-brand { display: flex; align-items: center; gap: 12px; }
+.ms-brand-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: #eef2ff; color: #4338ca; font-weight: 700; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.ms-brand-name { font-size: 20px; font-weight: 700; color: #111827; }
+.ms-sub-id { font-size: 12.5px; color: #6b7280; margin-top: 2px; }
+.ms-header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ── Buttons ─────────────────────────────────────────────────────────── */
+.ms-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.15s, opacity 0.15s;
+}
+.ms-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.ms-btn--primary { background: #3b82f6; color: #fff; }
+.ms-btn--primary:hover:not(:disabled) { background: #2563eb; }
+.ms-btn--outline { background: #fff; color: #374151; border-color: #d1d5db; }
+.ms-btn--outline:hover:not(:disabled) { background: #f9fafb; }
+.ms-btn--danger-outline { background: #fff; color: #dc2626; border-color: #fecaca; }
+.ms-btn--danger-outline:hover:not(:disabled) { background: #fef2f2; }
+.ms-btn--sm { padding: 5px 10px; font-size: 12px; }
+
+/* ── Main grid: details table + next-payment card ───────────────────── */
+.ms-main-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 20px;
+}
+@media (max-width: 860px) {
+  .ms-main-grid { grid-template-columns: 1fr; }
+}
+
+.ms-details-card, .ms-nonrecurring-card, .ms-footer-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+}
+.ms-details-card h3, .ms-nonrecurring-header h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 14px;
+}
+
+/* ── Tables ──────────────────────────────────────────────────────────── */
+.ms-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ms-table thead th {
+  text-align: left;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: #9ca3af;
+  font-weight: 700;
+  padding: 8px 10px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.ms-table thead th:last-child, .ms-table tbody td:last-child { text-align: right; }
+.ms-table tbody td {
+  padding: 11px 10px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
+}
+.ms-table tbody tr:last-child td { border-bottom: none; }
+.ms-table-total-row td {
+  font-weight: 700;
+  color: #111827;
+  border-top: 2px solid #e5e7eb;
+  padding-top: 14px;
+}
+.ms-table-subrow td { padding: 0 10px 10px; border-bottom: 1px solid #f3f4f6; }
+
+/* ── Next payment card ───────────────────────────────────────────────── */
+.ms-payment-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: left;
+}
+.ms-payment-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 14px;
+}
+.ms-link { font-size: 12.5px; color: #3b82f6; text-decoration: underline; cursor: pointer; }
+.ms-link--disabled { color: #9ca3af; cursor: default; text-decoration: none; }
+.ms-payment-date { font-size: 15px; font-weight: 700; color: #111827; }
+.ms-payment-cycle { font-size: 12.5px; color: #6b7280; margin-bottom: 14px; }
+.ms-payment-amount-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef2ff;
+  color: #1e293b;
+  font-weight: 700;
+  font-size: 17px;
+  border-radius: 999px;
+  padding: 14px 22px;
+}
+.ms-payment-tax-note { font-size: 11px; color: #9ca3af; margin-top: 8px; }
+
+/* ── Nonrecurring add-ons ────────────────────────────────────────────── */
+.ms-nonrecurring-card { margin-bottom: 20px; }
+.ms-nonrecurring-header { display: flex; justify-content: space-between; align-items: center; }
+.ms-qty-input {
+  width: 52px;
+  padding: 5px 6px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-right: 8px;
+  text-align: center;
+}
+.ms-fineprint { font-size: 11.5px; color: #9ca3af; margin: 10px 0 0; }
+
+/* ── Footer / cancel row ─────────────────────────────────────────────── */
+.ms-footer-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.ms-footer-note { font-size: 13px; color: #6b7280; }
+
+/* ── Modal shell (used by both the Upgrade wizard and Change Plan info) ─ */
+.ms-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 48px 16px;
+  overflow-y: auto;
+  z-index: 60;
+}
+.ms-modal {
+  background: #fff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 620px;
+  padding: 28px 32px 32px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+}
+.ms-modal--small { max-width: 440px; }
+.ms-modal-close {
+  position: absolute; top: 16px; right: 16px;
+  border: none; background: transparent; cursor: pointer; color: #9ca3af;
+}
+.ms-modal-title { text-align: center; font-size: 16px; font-weight: 700; margin: 0 0 22px; color: #111827; }
+
+/* ── Stepper (Upgrade Add-Ons / Confirm Order / Confirmation) ───────── */
+.ms-stepper { display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
+.ms-step { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 110px; }
+.ms-step-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #d1d5db;
+}
+.ms-step--active .ms-step-dot { background: #3b82f6; }
+.ms-step--done .ms-step-dot { background: #10b981; }
+.ms-step-label { font-size: 11.5px; color: #9ca3af; text-align: center; }
+.ms-step--active .ms-step-label { color: #3b82f6; font-weight: 600; }
+.ms-step--done .ms-step-label { color: #10b981; }
+.ms-step-line { flex: 1; height: 1px; background: #e5e7eb; max-width: 60px; margin-bottom: 18px; }
+
+.ms-error {
+  background: #fef2f2; color: #991b1b; border: 1px solid #fecaca;
+  border-radius: 8px; padding: 9px 12px; font-size: 12.5px; margin-bottom: 14px;
+}
+
+.ms-table-wrap { max-height: 340px; overflow-y: auto; margin-bottom: 18px; }
+.ms-item-name { font-weight: 600; font-size: 13px; color: #1f2937; }
+.ms-item-sub { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+.ms-item-sub--owned { color: #2563eb; font-weight: 600; }
+
+.ms-checkbox input { width: 16px; height: 16px; }
+
+.ms-stepper-control {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid #d1d5db; border-radius: 7px; padding: 3px 6px;
+}
+.ms-stepper-control button {
+  border: none; background: #f3f4f6; width: 22px; height: 22px; border-radius: 5px;
+  cursor: pointer; font-size: 14px; line-height: 1;
+}
+.ms-stepper-control button:disabled { opacity: 0.4; cursor: not-allowed; }
+.ms-stepper-control span { min-width: 18px; text-align: center; font-size: 13px; font-weight: 600; }
+
+.ms-after-badge {
+  color: #059669; font-weight: 600; font-size: 12.5px;
+}
+.ms-after-badge--removed { color: #dc2626; }
+
+.ms-amount-block { text-align: center; margin: 8px 0 22px; }
+.ms-amount-label { font-size: 12.5px; color: #6b7280; margin-bottom: 6px; }
+.ms-amount-value { font-size: 26px; font-weight: 700; color: #111827; }
+
+.ms-modal-actions { display: flex; justify-content: center; gap: 12px; }
+
+/* ── Confirm step ────────────────────────────────────────────────────── */
+.ms-back-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  border: none; background: none; color: #6b7280; font-size: 12.5px; cursor: pointer;
+  margin-bottom: 12px;
+}
+.ms-confirm-summary h3 { font-size: 14px; margin-bottom: 12px; }
+.ms-confirm-row {
+  display: flex; justify-content: space-between; font-size: 13px;
+  padding: 8px 0; border-bottom: 1px solid #f3f4f6; color: #374151;
+}
+.ms-confirm-row--total { font-weight: 700; color: #111827; border-bottom: none; padding-top: 12px; }
+.ms-confirm-note { font-size: 12px; color: #9ca3af; margin: 14px 0 22px; line-height: 1.5; }
+
+/* ── Confirmation step ───────────────────────────────────────────────── */
+.ms-confirmation { text-align: center; padding: 20px 0; }
+.ms-confirmation-icon { color: #10b981; margin-bottom: 14px; }
+.ms-confirmation h3 { font-size: 17px; margin-bottom: 8px; }
+.ms-confirmation p { color: #6b7280; font-size: 13.5px; margin-bottom: 22px; }
+
+
+/* ── Additions for UpgradeAddOnsWizard's sequential per-add-on checkout ──
+   Append these to the existing ManageSubscription.css — every other class
+   referenced by ManageSubscription.jsx / UpgradeAddOnsWizard.jsx is
+   unchanged from before, only these are new. */
+
+.ms-processing {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ms-confirmation-icon--warn {
+  color: #b45309; /* amber-700 — distinct from the success green, not an error red */
+}
+
+.ms-result-list {
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+}
+
+.ms-result-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid #eef0f3;
+  font-size: 13px;
+}
+
+.ms-result-list li:last-child {
+  border-bottom: none;
+}
+
+.ms-result-item--ok span:last-child {
+  color: #15803d; /* green-700 */
+  font-weight: 500;
+}
+
+.ms-result-item--failed span:last-child {
+  color: #b91c1c; /* red-700 */
+  font-weight: 500;
+}
+
+/* ── Buy a Framework modal (additive — see BuyFrameworkModal.jsx) ───────── */
+
+.fw-store-modal { max-width: 620px; }
+
+.fw-store-sub {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0 0 18px;
+  text-align: center;
+}
+
+.fw-store-banner { margin-bottom: 14px; }
+
+.fw-store-loading { padding: 30px 0; }
+
+.fw-store-section-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #9ca3af;
+  margin: 18px 0 10px;
+}
+
+.fw-store-section-label:first-of-type { margin-top: 0; }
+
+.fw-store-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.fw-store-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fff;
+}
+
+.fw-store-card--active {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: #f9fafb;
+}
+
+.fw-store-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fw-store-card-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #15803d;
+}
+
+.fw-store-picker { display: flex; flex-direction: column; gap: 12px; }
+.fw-store-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: #111827;
+  background: #fff;
+}
+.fw-store-select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+.fw-store-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
+}
+.fw-store-result-info { display: flex; flex-direction: column; gap: 4px; }
+.fw-store-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.fw-store-card-price {
+  font-size: 11.5px;
+  color: #6b7280;
+}

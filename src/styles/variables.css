@@ -1,0 +1,39 @@
+/* ============================================================================
+   CALVANT DARK THEME - Matched with About/Security page design
+   ============================================================================ */
+:root {
+  /* Primary dark background matching About page */
+  --cv-bg-primary: #050816;
+  --cv-bg-secondary: #0b1020;
+  --cv-bg-card: #0f1729;
+
+  /* Text colors */
+  --cv-text-primary: #e5e7eb;
+  --cv-text-secondary: #9ca3af;
+  --cv-text-muted: #6b7280;
+
+  /* Accent - indigo matching About/Security page */
+  --cv-accent: #4f46e5;
+  --cv-accent-hover: #4338ca;
+  --cv-accent-rgb: 79, 70, 229;
+
+  /* Borders */
+  --cv-border: rgba(148, 163, 184, 0.35);
+  --cv-border-card: rgba(148, 163, 184, 0.35);
+
+  /* Radius */
+  --cv-radius: 12px;
+
+  /* Layout */
+  --cv-container: 1200px;
+  --cv-container-narrow: 800px;
+
+  /* Shadows */
+  --cv-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
+  --cv-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.45);
+  --cv-shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.8);
+
+  /* Transitions */
+  --cv-transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --cv-transition: 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}

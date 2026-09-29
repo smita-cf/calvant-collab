@@ -1,0 +1,115 @@
+// src/modules/riskAssesment/controldescriptionconstants.js
+
+/**
+ * CONTROL_MAPPING
+ * Maps controlId → short KPI metric label.
+ * Shown in the "Metric" column of the Risk Assessment table for disconnected
+ * (manual) rows. Connected rows use the live metric name from the API.
+ *
+ * These labels are intentionally measurable / KPI-style, e.g.:
+ *   "% Assets with Assigned Owner"
+ * rather than the ISO clause title.
+ */
+export const CONTROL_MAPPING = {
+
+  // ── Section 5 – Organisational Controls ────────────────────────────────────
+  "5.1":  "% Security Policies Approved & Published",
+  "5.2":  "% Roles with Documented Security Responsibilities",
+  "5.3":  "% IAM Roles with SoD-Compliant Policy Assignments",
+  "5.4":  "% IAM Users with MFA Enabled",
+  "5.5":  "% Authority Contacts Reviewed in Period",
+  "5.6":  "% Special Interest Group Memberships Reviewed",
+  "5.7":  "% Threats Detected & Actioned",
+  "5.8":  "% Projects with Completed Security Review",
+  "5.9":  "% Assets with Assigned Owner",
+  "5.10": "% Users with Signed Acceptable Use Agreement",
+  "5.11": "% Assets Returned upon Offboarding",
+  "5.12": "% Information Assets with Classification Label",
+  "5.13": "% Classified Assets with Labelling Applied",
+  "5.14": "% Data Transfer Channels with Transfer Agreement",
+  "5.15": "% User Accounts Approved & Active",
+  "5.16": "% Identities with Verified Lifecycle Records",
+  "5.17": "Authentication Policy Compliance (MFA, Complexity & Rotation Enforced)",
+  "5.18": "% Access Rights Reviewed & Recertified",
+  "5.19": "% Suppliers with Active Security Assessment",
+  "5.20": "% Supplier Contracts with Information Security Clauses",
+  "5.21": "% ICT Suppliers with Verified Security Controls",
+  "5.22": "% SLA Obligations Met in Period",
+  "5.23": "% Cloud Services Recorded & Approved in Config",
+  "5.24": "% Incident Response Plan Steps Documented & Tested",
+  "5.25": "% Security Events Classified & Triaged within SLA",
+  "5.26": "% Incidents Resolved within Target Resolution Time",
+  "5.27": "% Major Incidents with Post-Incident Review Completed",
+  "5.28": "% Incidents with Documented & Preserved Evidence",
+  "5.29": "% DR Steps Completed",
+  "5.30": "% System Uptime (Monitoring Datapoints)",
+  "5.31": "% Regulatory Requirements with Documented Compliance",
+  "5.32": "% Software Assets with Valid Licence",
+  "5.33": "% Backup Jobs Completed Successfully",
+  "5.34": "% PII-Processing Systems with Privacy Controls",
+  "5.35": "% Audit Findings Remediated in Period",
+  "5.36": "% Controls Assessed as Compliant",
+  "5.37": "% Operating Procedures Documented & Approved",
+
+  // ── Section 6 – People Controls ────────────────────────────────────────────
+  "6.1": "% New Hires with Completed Pre-Employment Screening",
+  "6.2": "% Employees with Signed Security Terms",
+  "6.3": "% Employees who Completed Security Awareness Training",
+  "6.4": "% Policy Violations Handled per Disciplinary Process",
+  "6.5": "% Offboarded Users with Access Revoked within SLA",
+  "6.6": "% Employees & Contractors with Signed NDA",
+  "6.7": "% Remote Workers with Compliant Endpoint & VPN Config",
+  "6.8": "% Security Events Reported through Official Channel",
+
+  // ── Section 7 – Physical Controls ──────────────────────────────────────────
+  "7.1":  "% Secure Perimeter Zones with Verified Access Controls",
+  "7.2":  "% Physical Access Points with Working Entry Controls",
+  "7.3":  "% Facilities with Verified Security Measures",
+  "7.4":  "% Required Monitoring Points Active (CCTV / Sensors)",
+  "7.5":  "% Physical Threats with Mitigation Controls in Place",
+  "7.6":  "% Secure Area Access Events Reported & Resolved",
+  "7.7":  "% Workstations Compliant on Clear Desk / Screen Check",
+  "7.8":  "% Equipment with Documented Siting & Protection Review",
+  "7.9":  "% Off-Premises Assets with Active Security Controls",
+  "7.10": "% Storage Media Accounted for in Asset Register",
+  "7.11": "% Utility Inspections Passed",
+  "7.12": "% Cable Runs with Physical Protection Verified",
+  "7.13": "% Equipment Assets with Maintenance Up to Date",
+  "7.14": "% Decommissioned Devices Securely Wiped or Destroyed",
+
+  // ── Section 8 – Technological Controls ─────────────────────────────────────
+  "8.1":  "% Endpoints with EDR, Encryption & Patch Compliance",
+  "8.2":  "% Privileged Accounts Reviewed & Recertified",
+  "8.3":  "% IAM Users Compliant with MFA + Password Policy",
+  "8.4":  "% Source Code Repositories with RBAC Enforced",
+  "8.5":  "% Systems with MFA or Certificate-Based Auth Enabled",
+  "8.6":  "Active Capacity Incidents & Alarms = 0 → Compliant",
+  "8.7":  "% Endpoints with Active & Updated Anti-Malware",
+  "8.8":  "% Vulnerabilities Remediated within SLA",
+  "8.9":  "% Config Changes within Approved Change Window",
+  "8.10": "% Data Deletion Requests Fulfilled within Policy Timeframe",
+  "8.11": "% Sensitive Data Systems with Masking Implemented",
+  "8.12": "% DLP Policy Violations Blocked or Resolved",
+  "8.13": "% Scheduled Backup Jobs Completed Successfully",
+  "8.14": "% Critical Systems with Active Redundancy Verified",
+  "8.15": "% Systems with Centralised Logging Enabled & Retained",
+  "8.16": "% Security Monitoring Alerts Reviewed within SLA",
+  "8.17": "% Systems Synchronised to Approved NTP Source",
+  "8.18": "% Privileged Tool Usage Events with Approval Record",
+  "8.19": "% Software Installations Approved",
+  "8.20": "% Network Segments with Security Controls Verified",
+  "8.21": "% Network Service SLAs with Security Requirements Met",
+  "8.22": "% Network Zones with Enforced Segmentation Policy",
+  "8.23": "% Web Access Requests Filtered & Logged",
+  "8.24": "% KMS Keys using Approved Algorithm Spec",
+  "8.25": "% SDLC Stages with Security Gate Passed",
+  "8.26": "% Applications with Documented Security Requirements",
+  "8.27": "% Systems Reviewed against Secure Architecture Principles",
+  "8.28": "% Code Repositories with SAST Scan Passing",
+  "8.29": "% Production Releases with Completed Security Test Evidence",
+  "8.30": "% Outsourced Engagements with Security Review Completed",
+  "8.31": "% Cross-Environment Events Authorised | SCP Enforced",
+  "8.32": "% Changes Processed through Approved Change Management",
+  "8.33": "% Test Environments using Anonymised or Synthetic Data",
+  "8.34": "% Audit Activities Completed without System Impact",
+};

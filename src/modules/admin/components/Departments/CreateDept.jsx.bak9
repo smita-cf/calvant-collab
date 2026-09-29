@@ -1,0 +1,510 @@
+﻿'use client'
+
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import api from "../../api/adminAxios";
+
+import { useEffectiveOrg } from '../../../../hooks/useEffectiveOrg';
+/* ---------------- PREDEFINED DEPARTMENTS ---------------- */
+const PREDEFINED_DEPARTMENTS = [
+  "Security Officer",
+  "Steering Committee",
+  "Admin & Facilities",
+  "IT Department",
+  "IT Infra",
+  "Vendor Management",
+  "Procurement",
+  "Legal",
+  "HR",
+  "IT Applications",
+];
+
+export default function CreateDept() {
+  const { isPartnerRoot, isOrgManager, effectiveOrgId, selectedChildOrg } = useEffectiveOrg();
+  const navigate = useHistory();
+
+  const [name, setName] = useState("");
+  const [mapping, setMapping] = useState("");
+  const [showMapping, setShowMapping] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [organizationId, setOrganizationId] = useState("");
+  const [inputFocused, setInputFocused] = useState(false);
+  const [organizations, setOrganizations] = useState([]);
+  const [selectedOrg, setSelectedOrg] = useState("");
+
+  const token = localStorage.getItem("token");
+  const decoded = token ? jwtDecode(token) : null;
+  const loggedInRole = Array.isArray(decoded?.role)
+    ? decoded.role[0]
+    : decoded?.role;
+  const isPartnerRoot =
+    loggedInRole === "root" &&
+    sessionStorage.getItem("isPartnerOrg") === "true";
+
+  /* -------- Get Organization from JWT -------- */
+  // Replace the existing useEffect that sets organizationId:
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setOrganizationId(decoded.organization);
+      } catch (err) {
+        console.error("Invalid token", err);
+      }
+    }
+
+    // fetch child orgs for partner root
+    if (isPartnerRoot) {
+      api
+        .get("https://api.calvant.com/user-service/api/organizations/children")
+        .then((res) =>
+          setOrganizations(Array.isArray(res.data) ? res.data : []),
+        )
+        .catch(console.error);
+    }
+  }, []);
+
+  /* -------- Auto-map if name matches predefined -------- */
+  useEffect(() => {
+    if (!name.trim()) {
+      setShowMapping(false);
+      setMapping("");
+      return;
+    }
+
+    const match = PREDEFINED_DEPARTMENTS.find(
+      (dept) => dept.toLowerCase() === name.trim().toLowerCase(),
+    );
+
+    if (match) {
+      setMapping(match);
+      setShowMapping(false);
+    } else {
+      setMapping("");
+      setShowMapping(true);
+    }
+  }, [name]);
+
+  /* -------- Submit Handler -------- */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (!organizationId) {
+      alert("Error: Organization not found. Please relogin.");
+      setLoading(false);
+      return;
+    }
+
+    if (showMapping && !mapping) {
+      alert("Please map this department to a predefined category.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const payload = {
+        name: name.trim(),
+        organization: isPartnerRoot
+          ? selectedOrg || organizationId // selected child org OR own org
+          : organizationId,
+        mapping: mapping,
+      };
+
+      await api.post("/departments", payload);
+      alert("Department created successfully!");
+      navigate.push("/departments/list");
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.error || "Failed to create department");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const isAutoMapped = name.trim() && !showMapping;
+
+  return (
+    <div style={styles.page}>
+      <div style={styles.card}>
+        {/* Header */}
+        <div style={styles.header}>
+          <div style={styles.headerIcon}>🏢</div>
+          <h2 style={styles.heading}>Create Department</h2>
+          <p style={styles.subheading}>
+            Add a new department to your organization
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} style={styles.form}>
+          {isPartnerRoot && (
+            <div style={styles.stepBlock}>
+              <div style={styles.stepLabel}>
+                <span
+                  style={{ ...styles.stepBadge, backgroundColor: "#6366f1" }}
+                >
+                  0
+                </span>
+                <span style={styles.stepTitle}>Select Organization</span>
+              </div>
+              <div style={styles.inputWrapper}>
+                <select
+                  value={selectedOrg}
+                  onChange={(e) => setSelectedOrg(e.target.value)}
+                  style={styles.select}
+                >
+                  <option value="">— My Organization (default) —</option>
+                  {organizations.map((org) => (
+                    <option key={org.id || org._id} value={org.id || org._id}>
+                      {org.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+          {/* ── Step 1: Department Name ── */}
+          <div style={styles.stepBlock}>
+            <div style={styles.stepLabel}>
+              <span style={styles.stepBadge}>1</span>
+              <span style={styles.stepTitle}>Department Name</span>
+            </div>
+
+            <div
+              style={{
+                ...styles.inputWrapper,
+                ...(inputFocused ? styles.inputWrapperFocused : {}),
+              }}
+            >
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                onFocus={() => setInputFocused(true)}
+                onBlur={() => setInputFocused(false)}
+                placeholder="e.g. IT Department, Legal, HR…"
+                required
+                style={styles.input}
+              />
+            </div>
+
+            {/* Auto-matched badge */}
+            {isAutoMapped && (
+              <div style={styles.matchedBadge}>
+                <span style={styles.matchedIcon}>✓</span>
+                Matched to predefined category: <strong>{mapping}</strong>
+              </div>
+            )}
+          </div>
+
+          {/* ── Step 2: Mapping (only when custom name) ── */}
+          {showMapping && (
+            <div style={styles.stepBlock}>
+              <div style={styles.stepLabel}>
+                <span
+                  style={{ ...styles.stepBadge, backgroundColor: "#f59e0b" }}
+                >
+                  2
+                </span>
+                <span style={styles.stepTitle}>Map to a Category</span>
+              </div>
+
+              <div style={styles.infoBox}>
+                <span style={styles.infoIcon}>ℹ️</span>
+                <span>
+                  <strong>"{name}"</strong> is a custom name. Please map it to
+                  the closest predefined category so the system can classify it
+                  correctly.
+                </span>
+              </div>
+
+              <div
+                style={{
+                  ...styles.inputWrapper,
+                  marginTop: "10px",
+                  ...(mapping ? styles.inputWrapperSuccess : {}),
+                }}
+              >
+                <select
+                  value={mapping}
+                  onChange={(e) => setMapping(e.target.value)}
+                  required
+                  style={styles.select}
+                >
+                  <option value="">— Select a category —</option>
+                  {PREDEFINED_DEPARTMENTS.map((dept) => (
+                    <option key={dept} value={dept}>
+                      {dept}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {mapping && (
+                <div style={{ ...styles.matchedBadge, marginTop: "8px" }}>
+                  <span style={styles.matchedIcon}>✓</span>
+                  Will be classified as: <strong>{mapping}</strong>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Actions ── */}
+          <div style={styles.actions}>
+            <button
+              type="submit"
+              style={{
+                ...styles.primaryBtn,
+                ...(loading ? styles.btnDisabled : {}),
+              }}
+              disabled={loading}
+            >
+              {loading ? (
+                <span style={styles.spinnerRow}>
+                  <span style={styles.spinner} />
+                  Creating…
+                </span>
+              ) : (
+                "Create Department"
+              )}
+            </button>
+
+            <button
+              type="button"
+              style={styles.secondaryBtn}
+              onClick={() => navigate.push("/")}
+              disabled={loading}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+        @keyframes slideDown {
+          from { opacity: 0; transform: translateY(-8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* ---------------- STYLES ---------------- */
+const styles = {
+  page: {
+    display: "flex",
+    justifyContent: "center",
+    padding: "40px 20px",
+    minHeight: "100%",
+    backgroundColor: "#f8fafc",
+  },
+  card: {
+    width: "100%",
+    maxWidth: "520px",
+    background: "#fff",
+    borderRadius: "16px",
+    boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
+    overflow: "hidden",
+    alignSelf: "flex-start",
+  },
+
+  /* Header */
+  header: {
+    padding: "30px 32px 24px",
+    borderBottom: "1px solid #f1f5f9",
+    textAlign: "center",
+  },
+  headerIcon: {
+    fontSize: "2rem",
+    marginBottom: "10px",
+  },
+  heading: {
+    margin: "0 0 6px",
+    fontWeight: 700,
+    color: "#0f172a",
+    fontSize: "1.5rem",
+  },
+  subheading: {
+    margin: 0,
+    color: "#64748b",
+    fontSize: "0.9rem",
+  },
+
+  /* Form */
+  form: {
+    padding: "28px 32px",
+  },
+
+  /* Step block */
+  stepBlock: {
+    marginBottom: "24px",
+    animation: "slideDown 0.2s ease",
+  },
+  stepLabel: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    marginBottom: "10px",
+  },
+  stepBadge: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "24px",
+    height: "24px",
+    borderRadius: "50%",
+    backgroundColor: "#2563eb",
+    color: "#fff",
+    fontSize: "12px",
+    fontWeight: 700,
+    flexShrink: 0,
+  },
+  stepTitle: {
+    fontWeight: 600,
+    color: "#1e293b",
+    fontSize: "0.95rem",
+  },
+
+  /* Input wrapper */
+  inputWrapper: {
+    border: "1.5px solid #e2e8f0",
+    borderRadius: "10px",
+    overflow: "hidden",
+    transition: "border-color 0.15s, box-shadow 0.15s",
+    backgroundColor: "#fff",
+  },
+  inputWrapperFocused: {
+    borderColor: "#2563eb",
+    boxShadow: "0 0 0 3px rgba(37,99,235,0.12)",
+  },
+  inputWrapperSuccess: {
+    borderColor: "#16a34a",
+    boxShadow: "0 0 0 3px rgba(22,163,74,0.1)",
+  },
+  input: {
+    display: "block",
+    width: "100%",
+    padding: "12px 14px",
+    border: "none",
+    outline: "none",
+    fontSize: "0.95rem",
+    color: "#0f172a",
+    backgroundColor: "transparent",
+    boxSizing: "border-box",
+  },
+  select: {
+    display: "block",
+    width: "100%",
+    padding: "12px 14px",
+    border: "none",
+    outline: "none",
+    fontSize: "0.95rem",
+    color: "#0f172a",
+    backgroundColor: "transparent",
+    cursor: "pointer",
+    boxSizing: "border-box",
+    appearance: "auto",
+  },
+
+  /* Info box */
+  infoBox: {
+    display: "flex",
+    gap: "10px",
+    alignItems: "flex-start",
+    backgroundColor: "#fffbeb",
+    border: "1px solid #fde68a",
+    borderRadius: "8px",
+    padding: "10px 14px",
+    fontSize: "0.85rem",
+    color: "#78350f",
+    lineHeight: 1.5,
+  },
+  infoIcon: {
+    flexShrink: 0,
+    fontSize: "1rem",
+    marginTop: "1px",
+  },
+
+  /* Matched badge */
+  matchedBadge: {
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    marginTop: "8px",
+    fontSize: "0.82rem",
+    color: "#15803d",
+  },
+  matchedIcon: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "18px",
+    height: "18px",
+    borderRadius: "50%",
+    backgroundColor: "#dcfce7",
+    color: "#15803d",
+    fontWeight: 700,
+    fontSize: "11px",
+    flexShrink: 0,
+  },
+
+  /* Actions */
+  actions: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    marginTop: "8px",
+  },
+  primaryBtn: {
+    width: "100%",
+    padding: "13px",
+    border: "none",
+    borderRadius: "10px",
+    backgroundColor: "#2563eb",
+    color: "#fff",
+    fontWeight: 600,
+    fontSize: "0.95rem",
+    cursor: "pointer",
+    transition: "background-color 0.15s",
+  },
+  btnDisabled: {
+    backgroundColor: "#93c5fd",
+    cursor: "not-allowed",
+  },
+  secondaryBtn: {
+    width: "100%",
+    padding: "13px",
+    border: "1.5px solid #e2e8f0",
+    borderRadius: "10px",
+    backgroundColor: "#fff",
+    color: "#475569",
+    fontWeight: 600,
+    fontSize: "0.95rem",
+    cursor: "pointer",
+  },
+
+  /* Spinner */
+  spinnerRow: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "10px",
+  },
+  spinner: {
+    display: "inline-block",
+    width: "16px",
+    height: "16px",
+    border: "2.5px solid rgba(255,255,255,0.3)",
+    borderTop: "2.5px solid #fff",
+    borderRadius: "50%",
+    animation: "spin 0.8s linear infinite",
+  },
+};

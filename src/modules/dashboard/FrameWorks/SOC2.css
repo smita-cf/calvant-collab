@@ -1,0 +1,103 @@
+/* SOC2.css — mirrors ISO_27001.css with SOC2-themed overrides */
+
+@import "./ISO_27001.css";
+
+/* ── SOC2 theme accent color overrides ── */
+.soc2-theme {
+  --soc2-accent: #f59e0b;          /* amber / gold for trust & compliance */
+  --soc2-accent-glow: rgba(245, 158, 11, 0.35);
+  --soc2-accent-dim: rgba(245, 158, 11, 0.12);
+}
+
+/* Hero badge */
+.soc2-badge {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(245, 158, 11, 0.05));
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+}
+
+/* Hero primary CTA */
+.soc2-primary {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.35) !important;
+}
+.soc2-primary:hover {
+  box-shadow: 0 12px 32px rgba(245, 158, 11, 0.5) !important;
+}
+
+/* Stat accent value */
+.soc2-accent {
+  color: #fbbf24 !important;
+}
+
+/* Orbit rings */
+.soc2-ring {
+  border-color: rgba(245, 158, 11, 0.25) !important;
+}
+.soc2-particle {
+  background: radial-gradient(circle, #f59e0b, transparent) !important;
+}
+.soc2-circle {
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.35) !important;
+}
+.soc2-arc {
+  border-top-color: #f59e0b !important;
+}
+
+/* Badge card */
+.soc2-badge-card {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+}
+
+/* Overview cards */
+.soc2-card .iso-card-icon {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(245, 158, 11, 0.05));
+  color: #fbbf24;
+}
+
+/* Clause card accents */
+.soc2-clause {
+  border-top: 3px solid #f59e0b !important;
+}
+.soc2-clause-required {
+  border-top: 3px solid #ef4444 !important;  /* red for required */
+}
+.soc2-number {
+  color: #fbbf24 !important;
+  background: rgba(245, 158, 11, 0.1) !important;
+}
+
+/* Annex intro */
+.soc2-annex-intro {
+  border-left: 4px solid #f59e0b !important;
+}
+
+/* Domain cards */
+.soc2-domain {
+  border-top: 3px solid #f59e0b !important;
+}
+.soc2-domain .iso-domain-title {
+  color: #fbbf24 !important;
+}
+
+/* Highlighted domain (Type II preferred) */
+.soc2-domain-highlight {
+  border: 2px solid rgba(245, 158, 11, 0.5) !important;
+  box-shadow: 0 0 24px rgba(245, 158, 11, 0.15) !important;
+}
+
+/* Benefit cards */
+.soc2-benefit .iso-benefit-icon {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(245, 158, 11, 0.05)) !important;
+  color: #fbbf24 !important;
+}
+
+/* CTA section */
+.soc2-cta {
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+.soc2-cta-primary {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.35) !important;
+}

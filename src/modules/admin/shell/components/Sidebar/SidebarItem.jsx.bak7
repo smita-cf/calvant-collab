@@ -1,0 +1,246 @@
+﻿'use client'
+
+import React, { useEffect } from "react";
+import PropTypes from "prop-types";
+import { NavLink, useLocation } from "react-router-dom";
+
+import Collapse from "@mui/material/Collapse";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemButton from "@mui/material/ListItemButton";
+import Typography from "@mui/material/Typography";
+
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+
+import { useTheme } from "@mui/material/styles";
+import { capitalize } from "../../utils/helpers";
+import { useEffectiveOrg } from '../../../../../hooks/useEffectiveOrg';
+
+const SidebarItem = ({
+  route,
+  index,
+  activeRoute,
+  toggleMenu,
+  setActiveRoute,
+  currentPath,
+  isExpanded = true,
+}) => {
+  const { isPartnerRoot, isOrgManager, effectiveOrgId, selectedChildOrg } = useEffectiveOrg();
+  const theme = useTheme();
+  const location = useLocation();
+  const role = localStorage.getItem("role");
+  
+  const effectiveRoles = [role];
+  if (role === "root" && isPartnerOrg) {
+    effectiveRoles.push("partner_root");
+  }
+  useEffect(() => {
+    if (route.type === "submenu" && currentPath) {
+      toggleMenu(index);
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!isExpanded && activeRoute === index) {
+      setActiveRoute(undefined);
+    }
+  }, [isExpanded]);
+
+  const collapsedBackground = "rgba(59, 130, 246, 0.08)";
+
+  const menuItemSx = {
+    px: 3,
+    py: 1.5,
+    minHeight: 48,
+    display: "flex",
+    alignItems: "center",
+    transition: "padding 0.3s ease",
+  };
+
+  const menuIconSx = {
+    minWidth: 24,
+    justifyContent: "center",
+    marginRight: isExpanded ? "20px" : "0px",
+    transition: "margin 0.3s ease",
+  };
+
+  const menuSubItemSx = {
+    pl: "72px",
+    pr: 2,
+    py: 1.5,
+  };
+
+  const textStyle = {
+    opacity: isExpanded ? 1 : 0,
+    transition: "opacity 0.25s ease-in-out, transform 0.3s ease",
+    transform: isExpanded ? "translateX(0px)" : "translateX(-10px)",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    flexGrow: 1,
+  };
+
+  // =========================
+  // EXTERNAL LINK
+  // =========================
+  if (route.type === "external") {
+    return (
+      <a
+        href={route.path}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ textDecoration: "none" }}
+      >
+        <ListItem disablePadding>
+          <ListItemButton sx={menuItemSx}>
+            <ListItemIcon sx={menuIconSx}>
+              <route.icon color="primary" />
+            </ListItemIcon>
+            <Typography sx={textStyle}>{capitalize(route.name)}</Typography>
+          </ListItemButton>
+        </ListItem>
+      </a>
+    );
+  }
+
+  // =========================
+  // SUBMENU
+  // =========================
+  if (route.type === "submenu") {
+    return (
+      <div
+        style={{
+          display: route.roles.some(r => effectiveRoles.includes(r)) ? "" : "none",
+          backgroundColor:
+            activeRoute === index ? collapsedBackground : "transparent",
+        }}
+      >
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => toggleMenu(index)} sx={menuItemSx}>
+            <ListItemIcon sx={menuIconSx}>
+              <route.icon
+                color={activeRoute === index ? "primary" : "inherit"}
+              />
+            </ListItemIcon>
+
+            <Typography
+              sx={{
+                ...textStyle,
+                fontWeight: activeRoute === index ? 600 : 400,
+              }}
+            >
+              {capitalize(route.name)}
+            </Typography>
+
+            <ListItemIcon
+              sx={{
+                ml: 1,
+                minWidth: 0,
+                opacity: isExpanded ? 1 : 0,
+                transition: "opacity 0.2s ease",
+              }}
+            >
+              {activeRoute === index ? (
+                <ArrowDropUpIcon />
+              ) : (
+                <ArrowDropDownIcon />
+              )}
+            </ListItemIcon>
+          </ListItemButton>
+        </ListItem>
+
+        <Collapse
+          in={activeRoute === index && isExpanded}
+          timeout={300}
+          unmountOnExit
+        >
+          <List disablePadding>
+            {route.children.map((subitem, subIndex) => (
+              <NavLink
+                to={`${route.path || ""}${subitem.path || ""}`}
+                key={subIndex}
+                style={({ isActive }) => ({
+                  display: subitem.hideFromMenu ? "none" : "block",
+                  textDecoration: "none",
+                  backgroundColor: isActive
+                    ? collapsedBackground
+                    : "transparent",
+                })}
+              >
+                {({ isActive }) => (
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      sx={menuSubItemSx}
+                      onClick={() => setActiveRoute(undefined)}
+                    >
+                      <Typography
+                        sx={{
+                          ...textStyle,
+                          color: "#475569",
+                          fontSize: "0.9rem",
+                          fontWeight: isActive ? 600 : 400,
+                        }}
+                      >
+                        {capitalize(subitem.name)}
+                      </Typography>
+                    </ListItemButton>
+                  </ListItem>
+                )}
+              </NavLink>
+            ))}
+          </List>
+        </Collapse>
+      </div>
+    );
+  }
+
+  // =========================
+  // NORMAL ITEM
+  // =========================
+  return (
+    <NavLink
+      to={route.path}
+      end
+      style={({ isActive }) => ({
+        display: route.roles.some(r => effectiveRoles.includes(r)) ? "" : "none",
+        textDecoration: "none",
+        backgroundColor: isActive ? collapsedBackground : "transparent",
+      })}
+    >
+      {({ isActive }) => (
+        <ListItem disablePadding>
+          <ListItemButton
+            sx={menuItemSx}
+            onClick={() => setActiveRoute(undefined)}
+          >
+            <ListItemIcon sx={menuIconSx}>
+              <route.icon color={isActive ? "primary" : "inherit"} />
+            </ListItemIcon>
+
+            <Typography
+              sx={{
+                ...textStyle,
+                fontWeight: isActive ? 600 : 400,
+              }}
+            >
+              {capitalize(route.name)}
+            </Typography>
+          </ListItemButton>
+        </ListItem>
+      )}
+    </NavLink>
+  );
+};
+
+SidebarItem.propTypes = {
+  route: PropTypes.object,
+  index: PropTypes.number,
+  activeRoute: PropTypes.number,
+  toggleMenu: PropTypes.func,
+  setActiveRoute: PropTypes.func,
+  currentPath: PropTypes.bool,
+  isExpanded: PropTypes.bool,
+};
+
+export default SidebarItem;

@@ -1,0 +1,537 @@
+/* ==========================================================================
+   DASHBOARD  logged in css LAYOUT SYSTEM
+   ========================================================================== */
+
+/* Responsive Dashboard Grid Container */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
+  padding: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Compliance Card Column Spanning */
+.compliance-span-2,
+.compliance-span-3,
+.compliance-span-4 {
+  grid-column: span 1;
+}
+
+@media (min-width: 640px) {
+  .compliance-span-2,
+  .compliance-span-3,
+  .compliance-span-4 {
+    grid-column: span 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .compliance-span-2 {
+    grid-column: span 2;
+  }
+  .compliance-span-3,
+  .compliance-span-4 {
+    grid-column: span 3;
+  }
+}
+
+@media (min-width: 1280px) {
+  .compliance-span-2 {
+    grid-column: span 2;
+  }
+  .compliance-span-3 {
+    grid-column: span 3;
+  }
+  .compliance-span-4 {
+    grid-column: span 4;
+  }
+}
+
+/* ==========================================================================
+   PREMIUM GLASSMORPHIC AND CARD STYLES
+   ========================================================================== */
+
+/* Glassmorphic Framework Card */
+.framework-glass-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 12px;
+  padding: 12px 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+}
+
+.framework-glass-card:hover,
+.framework-glass-card.active-glow-item {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(59, 130, 246, 0.45);
+  box-shadow: 0 8px 20px -3px rgba(59, 130, 246, 0.12), 0 4px 6px -2px rgba(59, 130, 246, 0.08);
+}
+
+
+/* Premium Linear Progress Indicator */
+.sleek-progress-container {
+  width: 100%;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.sleek-progress-bar {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.sleek-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: progress-shimmer 2.2s infinite linear;
+}
+
+@keyframes progress-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ==========================================================================
+   SCROLLBAR STYLING
+   ========================================================================== */
+
+.custom-slim-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(203, 213, 225, 0.5) transparent;
+}
+
+.custom-slim-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.custom-slim-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-slim-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(203, 213, 225, 0.5);
+  border-radius: 10px;
+  border: transparent;
+}
+
+.custom-slim-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.8);
+}
+
+/* ==========================================================================
+   MICRO-ANIMATIONS AND STATUS INDICATORS
+   ========================================================================== */
+
+/* Breathing status lights */
+.breathing-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+
+.breathing-status-dot::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: inherit;
+  opacity: 0.4;
+  animation: breath 2s infinite ease-in-out;
+}
+
+@keyframes breath {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* Rotating subtle dashboard icons */
+.rotate-icon-hover:hover .rotate-icon {
+  transform: rotate(15deg) scale(1.05);
+}
+
+.rotate-icon {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ==========================================================================
+   SPACE-OPTIMIZED SEGMENTED COMPLIANCE ROWS
+   ========================================================================== */
+
+/* Sleek Framework Slim Row */
+.framework-slim-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  border-radius: 10px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.framework-slim-row:hover {
+  transform: translateX(4px);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(203, 213, 225, 0.9);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+/* Dynamic glow borders for slim rows */
+.framework-slim-row.iso27001-glow:hover { border-color: rgba(21, 101, 192, 0.4); }
+.framework-slim-row.iso27701-glow:hover { border-color: rgba(106, 27, 154, 0.4); }
+.framework-slim-row.soc2-glow:hover { border-color: rgba(27, 94, 32, 0.4); }
+.framework-slim-row.iso42001-glow:hover { border-color: rgba(230, 81, 0, 0.4); }
+.framework-slim-row.ksapdpl-glow:hover { border-color: rgba(194, 65, 12, 0.4); }
+.framework-slim-row.gdpr-glow:hover { border-color: rgba(16, 120, 185, 0.4); }
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15), 0 0 0 1px rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.45);
+}
+
+.stat-card--green .stat-card-icon {
+  background: rgba(34, 197, 94, 0.16);
+  color: #047857;
+}
+.stat-card--green .stat-card-trend {
+  background: rgba(34, 197, 94, 0.16);
+  color: #047857;
+}
+
+.stat-card--blue .stat-card-icon {
+  background: rgba(59, 130, 246, 0.16);
+  color: #1d4ed8;
+}
+.stat-card--blue .stat-card-trend {
+  background: rgba(59, 130, 246, 0.16);
+  color: #1d4ed8;
+}
+
+.stat-card--amber .stat-card-icon {
+  background: rgba(245, 158, 11, 0.16);
+  color: #b45309;
+}
+.stat-card--amber .stat-card-trend {
+  background: rgba(245, 158, 11, 0.16);
+  color: #b45309;
+}
+
+.stat-card--purple .stat-card-icon {
+  background: rgba(139, 92, 246, 0.16);
+  color: #6d28d9;
+}
+.stat-card--purple .stat-card-trend {
+  background: rgba(139, 92, 246, 0.16);
+  color: #6d28d9;
+}
+
+.framework-slim-row.dpdpa-glow:hover { border-color: rgba(255, 107, 53, 0.4); }
+
+/* Segmented Compliance Progress Bar */
+.segmented-bar {
+  flex: 1;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 9999px;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+.segmented-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: progress-shimmer 2.2s infinite linear;
+  pointer-events: none;
+}
+
+.segmented-portion {
+  height: 100%;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.module-card-premium {
+  position: relative;
+  overflow: hidden;
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04),
+              0 4px 12px rgba(0,0,0,0.03),
+              0 0 0 1px rgba(226,232,240,0.5);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e2e8f0;
+}
+
+.module-card-premium:hover {
+  transform: translateY(-3px);
+}
+
+/* Professional color-coded border hover animation for each GRC module */
+.module-card-premium.accent-rose:hover {
+  border-color: rgba(244, 63, 94, 0.45);
+  box-shadow: 0 10px 25px -5px rgba(244, 63, 94, 0.12),
+              0 8px 16px -6px rgba(244, 63, 94, 0.08),
+              0 0 0 1px rgba(244, 63, 94, 0.15);
+}
+.module-card-premium.accent-blue:hover {
+  border-color: rgba(59, 130, 246, 0.45);
+  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.12),
+              0 8px 16px -6px rgba(59, 130, 246, 0.08),
+              0 0 0 1px rgba(59, 130, 246, 0.15);
+}
+.module-card-premium.accent-amber:hover {
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.12),
+              0 8px 16px -6px rgba(245, 158, 11, 0.08),
+              0 0 0 1px rgba(245, 158, 11, 0.15);
+}
+.module-card-premium.accent-green:hover {
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.12),
+              0 8px 16px -6px rgba(16, 185, 129, 0.08),
+              0 0 0 1px rgba(16, 185, 129, 0.15);
+}
+.module-card-premium.accent-violet:hover {
+  border-color: rgba(139, 92, 246, 0.45);
+  box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.12),
+              0 8px 16px -6px rgba(139, 92, 246, 0.08),
+              0 0 0 1px rgba(139, 92, 246, 0.15);
+}
+.module-card-premium.accent-sky:hover {
+  border-color: rgba(14, 165, 233, 0.45);
+  box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.12),
+              0 8px 16px -6px rgba(14, 165, 233, 0.08),
+              0 0 0 1px rgba(14, 165, 233, 0.15);
+}
+.module-card-premium.accent-indigo:hover {
+  border-color: rgba(99, 102, 241, 0.45);
+  box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.12),
+              0 8px 16px -6px rgba(99, 102, 241, 0.08),
+              0 0 0 1px rgba(99, 102, 241, 0.15);
+}
+.module-card-premium.accent-fuchsia:hover {
+  border-color: rgba(217, 70, 239, 0.45);
+  box-shadow: 0 10px 25px -5px rgba(217, 70, 239, 0.12),
+              0 8px 16px -6px rgba(217, 70, 239, 0.08),
+              0 0 0 1px rgba(217, 70, 239, 0.15);
+}
+
+/* ── Dashboard Page Flat Light Background ─────────────────────────────────── */
+.dashboard-page-bg {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background: #f8fafc;
+  overflow-x: visible;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Top Stats Grid Columns Layout ───────────────────────────────────────── */
+.stats-banner-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 18px;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .stats-banner-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .stats-banner-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Clickable Module Cursor Styles */
+.module-card-premium {
+  cursor: pointer !important;
+}
+
+.module-card-premium * {
+  cursor: pointer !important;
+}
+
+/* Compliance module has a default cursor for static areas, but pointer for its interactive children */
+#compliance-module {
+  cursor: default !important;
+}
+#compliance-module h4,
+#compliance-module .framework-glass-card,
+#compliance-module .framework-glass-card *,
+#compliance-module .framework-slim-row,
+#compliance-module .framework-slim-row * {
+  cursor: pointer !important;
+}
+
+
+/* Premium Unified B2B GRC Stats Strip (Redesigned Light/Executive Style) */
+.stats-strip-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 18px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02),
+              0 4px 12px rgba(0, 0, 0, 0.03),
+              0 0 0 1px rgba(226, 232, 240, 0.5);
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stats-strip-container:hover {
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04),
+              0 0 0 1px rgba(226, 232, 240, 0.7);
+  transform: translateY(-1px);
+}
+
+.stats-strip-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  padding: 0 16px;
+  position: relative;
+}
+
+.stats-icon-container {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.stats-value {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.stats-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 3px;
+}
+
+.stats-strip-divider {
+  width: 1px;
+  height: 36px;
+  background-color: #e2e8f0;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .stats-strip-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 16px;
+  }
+  .stats-strip-divider {
+    display: none;
+  }
+  .stats-strip-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .stats-strip-item:last-child {
+    border-bottom: none;
+  }
+}

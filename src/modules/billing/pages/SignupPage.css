@@ -1,0 +1,381 @@
+.signup-page {
+  --sp-bg: #050816;
+  --sp-card: #0f1729;
+  --sp-text: #e5e7eb;
+  --sp-text-muted: #9ca3af;
+  --sp-accent: #4f46e5;
+  --sp-accent-2: #7c3aed;
+  --sp-border: rgba(148, 163, 184, 0.18);
+
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sp-bg);
+  padding: 40px 20px;
+}
+
+.signup-card {
+  width: 100%;
+  max-width: 440px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  border: 1px solid var(--sp-border);
+  border-radius: 20px;
+  padding: 40px 36px;
+  color: var(--sp-text);
+}
+
+.signup-card h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.signup-sub {
+  color: var(--sp-text-muted);
+  font-size: 14px;
+  margin: 0 0 28px;
+}
+
+.signup-field {
+  display: block;
+  margin-bottom: 18px;
+}
+
+.signup-field > span {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #cbd5e1;
+  margin-bottom: 6px;
+}
+
+.signup-field input,
+.signup-field select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--sp-border);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 14px;
+  color: var(--sp-text);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.signup-field input:focus,
+.signup-field select:focus {
+  border-color: var(--sp-accent);
+}
+
+.signup-field select option {
+  background: var(--sp-card);
+  color: var(--sp-text);
+}
+
+.signup-password-wrap {
+  position: relative;
+}
+
+.signup-password-wrap input {
+  padding-right: 42px;
+}
+
+.signup-password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--sp-text-muted);
+  cursor: pointer;
+  display: flex;
+}
+
+.signup-cycle-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.signup-cycle-toggle button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--sp-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--sp-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.signup-cycle-toggle button.active {
+  background: linear-gradient(135deg, var(--sp-accent), var(--sp-accent-2));
+  color: #fff;
+  border-color: transparent;
+}
+
+.signup-error {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+}
+
+.signup-cta {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--sp-accent), var(--sp-accent-2));
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.4);
+  margin-top: 6px;
+}
+
+.signup-cta:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.signup-footnote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--sp-text-muted);
+  font-size: 12px;
+  margin: 16px 0 0;
+}
+
+.signup-success {
+  text-align: center;
+}
+
+.signup-success-icon {
+  color: #34d399;
+  margin-bottom: 16px;
+}
+
+.signup-success h1 {
+  margin-bottom: 12px;
+}
+
+.signup-success p {
+  color: var(--sp-text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+
+.signup-trial-note {
+  background: rgba(79, 70, 229, 0.1);
+  border: 1px solid rgba(79, 70, 229, 0.3);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #cbd5e1 !important;
+}
+
+.signup-success .signup-cta {
+  margin-top: 20px;
+}
+
+/* ── OTP verification modal ─────────────────────────────────────────── */
+/* Reuses the same --sp-* tokens as .signup-page so it reads as one system
+   rather than a bolted-on dialog. */
+
+.otp-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 4, 12, 0.72);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+  animation: otp-fade-in 0.15s ease;
+}
+
+.otp-modal {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  background: linear-gradient(180deg, #121b34, #0d1526);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 20px;
+  padding: 36px 32px;
+  color: #e5e7eb;
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  animation: otp-rise-in 0.2s ease;
+}
+
+.otp-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  display: flex;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.otp-close:hover {
+  color: #e5e7eb;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.otp-close:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.otp-modal h2 {
+  font-size: 21px;
+  font-weight: 700;
+  margin: 4px 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.otp-sub {
+  color: #9ca3af;
+  font-size: 13.5px;
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+
+.otp-sub strong {
+  color: #e5e7eb;
+}
+
+.otp-digit-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.otp-digit {
+  width: 44px;
+  height: 52px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 10px;
+  color: #e5e7eb;
+  outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.otp-digit:focus {
+  border-color: #4f46e5;
+  background: rgba(79, 70, 229, 0.08);
+}
+
+.otp-digit:disabled {
+  opacity: 0.5;
+}
+
+.otp-resend {
+  width: 100%;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 14px 0 0;
+}
+
+.otp-resend:not(:disabled):hover {
+  color: #c7d2fe;
+}
+
+.otp-resend:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.otp-finishing {
+  padding: 12px 0 4px;
+}
+
+.otp-finishing h2 {
+  margin-top: 20px;
+}
+
+.otp-finishing p {
+  color: #9ca3af;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.otp-spinner {
+  width: 36px;
+  height: 36px;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 3px solid rgba(79, 70, 229, 0.2);
+  border-top-color: #7c3aed;
+  animation: otp-spin 0.8s linear infinite;
+}
+
+@keyframes otp-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes otp-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes otp-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .otp-backdrop,
+  .otp-modal,
+  .otp-spinner {
+    animation: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .otp-digit {
+    width: 38px;
+    height: 46px;
+    font-size: 18px;
+  }
+}

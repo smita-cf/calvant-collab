@@ -1,0 +1,212 @@
+@keyframes backgroundPulse {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.dashboard-bg {
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(270deg, #a8dadc, #457b9d, #1d3557, #457b9d);
+  background-size: 600% 600%;
+  animation: backgroundPulse 18s ease infinite;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  padding: 20px;
+  color: #f0f4f8;
+}
+
+.dashboard-header {
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px 0 40px 0;
+  text-align: center;
+  position: relative;
+}
+
+.logo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.logo-icon {
+  width: 42px;
+  height: 42px;
+  user-select: none;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
+  transform-origin: center;
+  animation: logoFloat 4s ease-in-out infinite;
+  fill: #2a9d8f;
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.dashboard-title {
+  font-size: 2.75rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.45);
+  margin: 0;
+  user-select: none;
+  color: #edf6f9;
+}
+
+.dashboard-desc {
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: #a8dadccc;
+  margin-bottom: 40px;
+}
+
+.dashboard-user {
+  background: #2a9d8fcc;
+  padding: 12px 24px;
+  border-radius: 28px;
+  font-weight: 500;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 12px #1e6767bb;
+  display: inline-block;
+  user-select: none;
+  margin: 0 auto;
+  color: #f0f4f8;
+}
+
+.dashboard-user small {
+  display: block;
+  font-size: 0.8rem;
+  opacity: 0.75;
+  margin-top: 4px;
+  color: #d1f2eb;
+}
+
+.login-btn {
+  background: linear-gradient(45deg, #2a9d8f, #1b665e);
+  border: none;
+  border-radius: 28px;
+  padding: 12px 40px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #edf6f9;
+  cursor: pointer;
+  box-shadow: 0 6px 15px #19675cbb;
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  display: inline-block;
+  user-select: none;
+  margin: 0 auto;
+}
+
+.login-btn:hover,
+.login-btn:focus {
+  transform: scale(1.06);
+  box-shadow: 0 12px 35px #19675cdd;
+  outline: none;
+}
+
+.dashboard-tiles {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  justify-content: center;
+  gap: 42px;
+  flex-wrap: wrap;
+  user-select: none;
+}
+
+.dashboard-tile {
+  background: #f0f4f8aa;
+  cursor: pointer;
+  flex: 1 1 240px;
+  max-width: 260px;
+  min-width: 210px;
+  min-height: 180px;
+  margin: 0 12px;
+  border-radius: 22px;
+  box-shadow:
+    inset 0 0 12px #247a6d88,
+    0 12px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 38px 32px 32px 32px;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease,
+    background-color 0.3s ease;
+  color: #264653dd;
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.04));
+  position: relative;
+  opacity: 1;
+  animation: fadeUp 0.5s ease forwards;
+  user-select: text;
+}
+
+.dashboard-tile:hover,
+.dashboard-tile:focus {
+  box-shadow:
+    inset 0 0 24px #247a6dcc,
+    0 20px 36px rgba(36, 122, 109, 0.4);
+  background-color: #38b6a9cc;
+  transform: translateY(-6px);
+  outline: none;
+  color: #fcfdfa;
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-tile.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+  box-shadow: none;
+  background-color: #a6bfbf77;
+  color: #7f8c8d99;
+}
+
+.dashboard-tile h2 {
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  user-select: text;
+}
+
+.dashboard-tile p {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  user-select: text;
+}
+
+@media (max-width: 800px) {
+  .dashboard-tiles {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+}
